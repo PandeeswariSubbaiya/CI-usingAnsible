@@ -18,7 +18,7 @@
         state: present
     - name: copy war file
       copy: 
-        src: ./target/LoginWebApp-1.0.0.war 
+        src: ./target/LoginWebApp-1.war 
         dest: /opt/apache-tomcat-10.1.6/webapps/
     - name: shutdown tomcat
       shell: nohup /opt/apache-tomcat-10.1.6/bin/shutdown.sh &
