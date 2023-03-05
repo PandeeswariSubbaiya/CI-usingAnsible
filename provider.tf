@@ -16,5 +16,7 @@ terraform {
     bucket = "pandeeswari-terraform-statefile"
     key = "Mumbai_Region/statefile"
     region = "ap-south-1"
+    dynamodb_table = "terraform_state_lock"
+    encrypt = "true"
   }
 }
