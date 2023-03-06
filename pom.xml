@@ -19,6 +19,17 @@
             <version>5.1.30</version>
         </dependency>
   </dependencies>
+  <distributionManagement>
+		 <snapshotRepository>
+		    <id>nexus</id>
+		    <url>http://54.173.243.199:8081/repository/maven-snapshots/</url>
+		 </snapshotRepository>
+		
+		<repository>
+		    <id>nexus</id>
+		    <url>http://54.173.243.199:8081/repository/maven-releases/</url>
+		</repository>
+  	</distributionManagement>
   <build>
   <pluginManagement>
    <plugins>
