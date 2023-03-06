@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region     = "ap-south-1"
+  region     = "us-east-1"
   //access_key = "AKIAUEYPFBJKFKE66SOM"
   //secret_key = "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"
 }
@@ -16,7 +16,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "pandeeswari-terraform-statefile"
-   key = "Mumbai_Region/statefile"
+   key = "North_Virginia_Keypair/statefile"
    region = "ap-south-1"
  }
 }
