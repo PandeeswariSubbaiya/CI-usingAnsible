@@ -1,4 +1,4 @@
-resource "aws_instance" "myec2" {
+resource "aws_instance" "myec2-NorthVirgina" {
   ami                    = "ami-0557a15b87f6559cf"
   instance_type          = "t2.micro"
   availability_zone = "us-east-1"
