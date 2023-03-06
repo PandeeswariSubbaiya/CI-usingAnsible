@@ -10,7 +10,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
   }
   provisioner "file" {
         source = "/home/ubuntu/testfile.txt"
-        destination = "/home/ubuntu"
+        destination = "/home/ubuntu/testfile.txt"
 }
         connection {
                 type = "ssh"
