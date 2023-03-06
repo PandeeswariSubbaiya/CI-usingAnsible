@@ -12,7 +12,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
         source = "/home/ubuntu/testfile.txt"
         destination = "/home/ubuntu/testfile.txt"
 }
-        provisioner "remote-exec"
+        provisioner "remote-exec" {
         connection {
                 type = "ssh"
                 host = self.public_ip
@@ -20,6 +20,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
                 private_key = ("/home/ubuntu/.ssh/id_rsa")
                // private_key = file("/home/ubuntu/.ssh/authorized_keys")
                 timeout = "1m"
+        }
 }
 }
  //provisioner "local-exec" {
