@@ -23,4 +23,3 @@ resource "aws_instance" "myec2-NorthVirgina" {
  //provisioner "local-exec" {
     //command = "echo ${aws_instance.myec2.public_ip} >> /etc/ansible/hosts"
   //}
-}
