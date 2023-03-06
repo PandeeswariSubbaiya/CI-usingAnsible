@@ -1,9 +1,9 @@
 resource "aws_instance" "myec2" {
   ami                    = "ami-0f8ca728008ff5af4"
   instance_type          = "t2.micro"
-  availability_zone = "ap-south-1a"
+  availability_zone = "us-east-1"
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
-  key_name = "Mumbai_Region"
+  key_name = "North_Virginia_Keypair"
 
   tags = {
     name = "testec2"
