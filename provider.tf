@@ -17,6 +17,6 @@ terraform {
   backend "s3" {
     bucket = "pandeeswari-terraform-statefile"
    key = "North_Virginia_Keypair/statefile"
-   region = "ap-south-1"
+   region = "us-east-1"
  }
 }
