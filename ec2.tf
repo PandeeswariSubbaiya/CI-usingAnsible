@@ -12,6 +12,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
         source = "/home/ubuntu/testfile.txt"
         destination = "/home/ubuntu/testfile.txt"
 }
+        provisioner "remote-exec"
         connection {
                 type = "ssh"
                 host = self.public_ip
