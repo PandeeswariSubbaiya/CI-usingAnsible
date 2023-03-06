@@ -9,14 +9,14 @@ resource "aws_instance" "myec2-NorthVirgina" {
     name = "testec2"
   }
   provisioner "file" {
-        source = "/root/sample/testfile.txt"
+        source = "/home/ubuntu/testfile.txt"
         destination = "/home/ubuntu"
 }
         connection {
                 type = "ssh"
                 host = self.public_ip
                 user = "ubuntu"
-                private_key = file("/root/.ssh/id_rsa")
+                private_key = file("/home/ubuntu/.ssh/id_rsa")
                 timeout = "1m"
 }
 }
