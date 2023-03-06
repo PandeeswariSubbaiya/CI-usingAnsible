@@ -15,7 +15,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "pandeeswari-terraform-statefile"
+    bucket = "northvirginabucket1"
    key = "North_Virginia_Keypair/statefile"
    region = "us-east-1"
  }
