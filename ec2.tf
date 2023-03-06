@@ -8,10 +8,10 @@ resource "aws_instance" "myec2-NorthVirgina" {
   tags = {
     name = "testec2"
   }
-  provisioner "file" {
-        source = "/home/ubuntu/testfile.txt"
-        destination = "/home/ubuntu/testfile.txt"
-}
+ // provisioner "file" {
+       // source = "/home/ubuntu/testfile.txt"
+  //      destination = "/home/ubuntu/testfile.txt"
+//}
         provisioner "remote-exec" {
         connection {
                 type = "ssh"
