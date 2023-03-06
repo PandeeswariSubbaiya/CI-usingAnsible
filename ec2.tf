@@ -15,7 +15,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
         connection {
                 type = "ssh"
                 host = self.public_ip
-                user = "ubuntu"
+                user = "root"
                 private_key = ("/home/ubuntu/.ssh/id_rsa")
                // private_key = file("/home/ubuntu/.ssh/authorized_keys")
                 timeout = "1m"
