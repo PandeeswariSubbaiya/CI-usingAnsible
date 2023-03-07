@@ -8,18 +8,28 @@ resource "aws_instance" "myec2-NorthVirgina" {
   tags = {
     name = "testec2"
   }
-  provisioner "file" {
-        source = "/home/ubuntu/testfile.txt"
-        destination = "/home/ubuntu/testfile.txt"
-}
-        connection {
-                type = "ssh"
-                host = self.public_ip
-                user = "root"
-                private_key = ("/home/ubuntu/.ssh/id_rsa")
+  //provisioner "file" {
+        //source = "/home/ubuntu/testfile.txt"
+        //destination = "/home/ubuntu/testfile.txt"
+//}
+       // connection {
+               // type = "ssh"
+              //  host = self.public_ip
+              //  user = "root"
+               // private_key = ("/home/ubuntu/.ssh/id_rsa")
                // private_key = file("/home/ubuntu/.ssh/authorized_keys")
-                timeout = "1m"
-}
+               // timeout = "1m"
+//}
+   connection {
+    type = "ssh"
+    host = aws_instance.web.public_ip
+    user = "ubuntu"
+    private_key = file("aws_iny_lappi.pem")
+    }
+   provisioner "file" {
+    source      = "index.html"
+    destination = "/home/ubuntu/index.html"
+  }
 }
  //provisioner "local-exec" {
     //command = "echo ${aws_instance.myec2.public_ip} >> /etc/ansible/hosts"
