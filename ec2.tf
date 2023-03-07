@@ -8,6 +8,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
   tags = {
     name = "testec2"
   }
+}
   //Security group creation and whitelisting the ip
 resource "aws_security_group" "allow_tls" {
   name = "terraform-sg-Nvirginia"
@@ -34,5 +35,4 @@ resource "aws_security_group" "allow_tls" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
 }
