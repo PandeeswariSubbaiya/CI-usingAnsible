@@ -1,7 +1,11 @@
 ---
 - hosts: webservers
-  remote_user: ec2-user
+  remote_user: ubuntu
   become: yes
+  gather_facts: true
+  vars:
+    ansible_ssh_private_key_file: /root/.ssh/id_rsa
+    ansible_ssh_user: ubuntu
   tasks:
     - name: downloading tomcat
       get_url:
@@ -16,11 +20,9 @@
       yum:
         name: java-11-amazon-corretto
         state: present
-    - name: copy war file
-      copy: 
-        src: ./target/LoginWebApp-1.war 
+    - name: copy jar file
+      copy:
+        src: /var/lib/jenkins/workspace/spring boot/target/springbootApp.jar
         dest: /opt/apache-tomcat-10.1.6/webapps/
-    - name: shutdown tomcat
-      shell: nohup /opt/apache-tomcat-10.1.6/bin/shutdown.sh &
     - name: starting tomcat
       shell: nohup /opt/apache-tomcat-10.1.6/bin/startup.sh &
