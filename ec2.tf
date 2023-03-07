@@ -22,7 +22,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
 //}
    connection {
     type = "ssh"
-    host = aws_instance.web.public_ip
+    host = self.public_ip
     user = "ubuntu"
     private_key = file("aws_iny_lappi.pem")
     }
