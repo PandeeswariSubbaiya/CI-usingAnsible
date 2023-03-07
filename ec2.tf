@@ -24,7 +24,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
     type = "ssh"
     host = self.public_ip
     user = "ubuntu"
-    private_key = file("/home/ubuntu/aws_iny_lappi.pem")
+    private_key = file("/home/ubuntu/.ssh/id_rsa")
     }
    provisioner "file" {
     source      = "index.html"
