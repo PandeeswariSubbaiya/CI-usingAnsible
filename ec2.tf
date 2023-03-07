@@ -1,4 +1,5 @@
 resource "aws_instance" "myec2-NorthVirgina" {
+  count                  = 2
   ami                    = "ami-0557a15b87f6559cf"
   instance_type          = "t2.micro"
   availability_zone = "us-east-1a"
@@ -8,7 +9,13 @@ resource "aws_instance" "myec2-NorthVirgina" {
   tags = {
     name = "testec2"
   }
+  connection {
+    type = "ssh"
+    host = self.public_ip
+    user = "ubuntu"
+    private_key = file("/root/.ssh/id_rsa")
 }
+}  
   //Security group creation and whitelisting the ip
 resource "aws_security_group" "allow_tls" {
   name = "terraform-sg-Nvirginia"
