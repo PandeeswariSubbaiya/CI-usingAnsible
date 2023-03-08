@@ -9,6 +9,6 @@ keyed_groups:
   # Add hosts to tag_Name_Value groups for each Name/Value tag pair
   - prefix: tag
     key: tags
-hostnames:
-  # - private-ip-address
-  - ip-address
+compose:
+  ansible_host: public_ip_address
+  tag:name: test2
