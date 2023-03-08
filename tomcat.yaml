@@ -2,6 +2,7 @@
   hosts: "{{ host_group }}"
   remote_user: ubuntu
   become: yes
+  tasks:
     - name: downloading tomcat
       get_url:
         url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.6/bin/apache-tomcat-10.1.6.tar.gz
