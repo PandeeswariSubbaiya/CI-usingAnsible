@@ -20,5 +20,10 @@
       copy:
         src: /var/lib/jenkins/workspace/terraform1/target/LoginWebApp-1
         dest: /opt/apache-tomcat-10.1.6/webapps/
-    - name: starting tomcat
-      shell: nohup /opt/apache-tomcat-10.1.6/bin/startup.sh &
+      notify:
+        - restart tomcat
+  handlers:
+    - name: restart tomcat
+      service:
+        name: tomcat
+        state: restarted
