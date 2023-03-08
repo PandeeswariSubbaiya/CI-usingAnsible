@@ -14,7 +14,7 @@
         remote_src: yes
     - name: installing java
       apt:
-        name: java-11-amazon-corretto
+        name: default-jdk
         state: present
     - name: copy jar file
       copy:
