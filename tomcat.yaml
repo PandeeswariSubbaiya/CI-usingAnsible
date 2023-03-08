@@ -1,5 +1,5 @@
 ---
-  hosts: "{{ host_group }}"
+- hosts: "{{ host_group }}"
   remote_user: ubuntu
   become: yes
   tasks:
