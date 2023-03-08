@@ -18,7 +18,7 @@
         state: present
     - name: copy jar file
       copy:
-        src: /var/lib/jenkins/workspace/spring boot/target/springbootApp.jar
+        src: /var/lib/jenkins/workspace/terraform1/target/LoginWebApp-1
         dest: /opt/apache-tomcat-10.1.6/webapps/
     - name: starting tomcat
       shell: nohup /opt/apache-tomcat-10.1.6/bin/startup.sh &
