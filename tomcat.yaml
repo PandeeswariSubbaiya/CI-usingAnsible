@@ -13,7 +13,7 @@
         dest: /opt
         remote_src: yes
     - name: installing java
-      yum:
+      apt:
         name: java-11-amazon-corretto
         state: present
     - name: copy jar file
