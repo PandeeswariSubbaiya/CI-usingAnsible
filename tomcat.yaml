@@ -27,3 +27,4 @@
       service:
         name: tomcat
         state: restarted
+      ignore_errors: yes
