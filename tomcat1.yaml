@@ -1,0 +1,8 @@
+---
+-       hosts: all
+        become: true
+        tasks: 
+          -     name: copy war onto tomcat server
+                copy:
+                  src: /var/lib/jenkins/workspace/terraform1/target/LoginWebApp-1
+                  dest: /opt/apache-tomcat-10.1.6/webapps/
