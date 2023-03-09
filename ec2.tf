@@ -9,7 +9,6 @@ resource "aws_instance" "myec2-NorthVirgina" {
   tags = {
     name = "testec2"
   }
-  provisioner "remote-exec" {
   connection {
     type = "ssh"
     host = self.public_ip
@@ -17,7 +16,6 @@ resource "aws_instance" "myec2-NorthVirgina" {
     private_key = file("/root/.ssh/id_rsa")
 }
 }  
-}
   //Security group creation and whitelisting the ip
 resource "aws_security_group" "allow_tls" {
   name = "terraform-sg-Nvirginia"
