@@ -9,10 +9,6 @@ resource "aws_instance" "myec2-NorthVirgina" {
   tags = {
     name = "testec2"
   }
-  provisioner "file" {
-    source = "/home/ubuntu/index.txt"
-    destination = "/home/ubuntu/index.txt"
-  }
   connection {
     type = "ssh"
     host = self.public_ip
