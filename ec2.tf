@@ -9,6 +9,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
   tags = {
     name = "testec2"
   }
+  provisioner "remote-exec" {
   connection {
     type = "ssh"
     host = self.public_ip
