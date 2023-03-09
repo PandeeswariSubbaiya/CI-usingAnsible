@@ -14,10 +14,10 @@ node{
         sh script: 'terraform init -reconfigure'
       }
     stage('Terraform plan') {
-        sh script: 'terraform plan -lock=false'
+        sh script: 'terraform plan'
       }
     stage('Terraform apply') {
-        sh script: 'terraform apply -lock=false -auto-approve'
+        sh script: 'terraform apply -auto-approve'
       }
     stage('ansible execution') {
           ansiblePlaybook credentialsId: 'North_Virginia_Keypair', disableHostKeyChecking: true, installation: 'ansible', inventory: 'aws_ec2.yaml', playbook: 'tomcat.yaml'
