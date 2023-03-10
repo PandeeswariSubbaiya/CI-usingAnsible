@@ -22,12 +22,12 @@
   <distributionManagement>
 		 <snapshotRepository>
 		    <id>nexusRepo</id>
-		    <url>http://54.173.243.199:8081/repository/sample-snapshots/</url>
+		    <url>http:http://54.173.243.199:8081/repository/maven-snapshots/</url>
 		 </snapshotRepository>
 		
 		<repository>
 		    <id>repository-example</id>
-		    <url>http://54.173.243.199:8081/repository/sample-releases/</url>
+		    <url>http://54.173.243.199:8081/repository/maven-releases/</url>
 		</repository>
   	</distributionManagement>
   <build>
