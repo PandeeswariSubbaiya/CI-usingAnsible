@@ -21,12 +21,12 @@
   </dependencies>
   <distributionManagement>
 		 <snapshotRepository>
-		    <id>nexusRepo</id>
+		    <id>maven-snapshots</id>
 		    <url>http:http://54.173.243.199:8081/repository/maven-snapshots/</url>
 		 </snapshotRepository>
 		
 		<repository>
-		    <id>repository-example</id>
+		    <id>maven-releases</id>
 		    <url>http://54.173.243.199:8081/repository/maven-releases/</url>
 		</repository>
   	</distributionManagement>
