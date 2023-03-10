@@ -22,12 +22,12 @@
   <distributionManagement>
 		 <snapshotRepository>
 		    <id>repository-example</id>
-		    <url>http://3.111.35.200:8081/repository/maven-mixed/</url>
+		    <url>http://3.111.35.200:8081/repository/mixed/</url>
 		 </snapshotRepository>
 		
 		<repository>
 		    <id>repository-example</id>
-		    <url>http://3.111.35.200:8081/repository/maven-mixed/</url>
+		    <url>http://3.111.35.200:8081/repository/mixed/</url>
 		</repository>
   	</distributionManagement>
   <build>
