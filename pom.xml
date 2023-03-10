@@ -21,13 +21,13 @@
   </dependencies>
   <distributionManagement>
 		 <snapshotRepository>
-		    <id>repository-example</id>
-		    <url>http://3.111.35.200:8081/repository/mixed/</url>
+		    <id>nexusRepo</id>
+		    <url>http://54.173.243.199:8081/repository/sample-snapshots/</url>
 		 </snapshotRepository>
 		
 		<repository>
 		    <id>repository-example</id>
-		    <url>http://3.111.35.200:8081/repository/mixed/</url>
+		    <url>http://54.173.243.199:8081/repository/sample-releases/</url>
 		</repository>
   	</distributionManagement>
   <build>
