@@ -2,7 +2,7 @@ resource "aws_instance" "myec2-NorthVirgina" {
   count                  = 2
   ami                    = "ami-0557a15b87f6559cf"
   instance_type          = "t2.micro"
-  availability_zone = "us-east-1a"
+  availability_zone = "us-east-1b"
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
   key_name = "North_Virginia_Keypair"
 
