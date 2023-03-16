@@ -1,0 +1,27 @@
+---
+- name: Create User and SSH Key
+  hosts: all
+  become: true
+
+  vars_files:
+    - vars/ssh_key.yml
+
+  tasks:
+    - name: Create User Account
+      user:
+        name: pandeeswari
+        comment: Pandeeswari
+        home: /home/pandeeswari
+        shell: /bin/bash
+
+    - name: Create SSH Directory
+      file:
+        path: "/home/pandeeswari/.ssh"
+        owner: pandeeswari
+        group: pandeeswari
+        mode: '0700'
+
+    - name: Add SSH Key
+      authorized_key:
+        user: pandeeswari
+        key: "{{ ssh_key }}"
