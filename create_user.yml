@@ -1,6 +1,6 @@
 ---
 - name: Create User and SSH Key
-  hosts: webservers
+  hosts: webserver
   become: true
 
   vars_files:
