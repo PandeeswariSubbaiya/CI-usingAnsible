@@ -21,7 +21,7 @@
         remote_src: yes
     - name: installing java
       apt:
-        name: default-jdk
+        name: openjdk-8-jdk
         state: present
     - name: copy jar file
       copy:
