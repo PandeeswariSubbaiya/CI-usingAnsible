@@ -21,7 +21,7 @@
         remote_src: yes
     - name: installing java
       apt:
-        name: default-jdk
+        name: openjdk-11-jre-headless
         state: present
     - name: copy jar file
       copy:
