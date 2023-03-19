@@ -21,7 +21,7 @@
         remote_src: yes
     - name: installing java
       apt:
-        name: openjdk-8-jdk
+        name: java-11-amazon-corretto
         state: present
     - name: copy jar file
       copy:
