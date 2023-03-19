@@ -1,0 +1,11 @@
+- name: Connect to remote host via SSH
+  hosts: all
+  become: true
+  vars_files:
+    - vault.yml
+  tasks:
+    - name: Create pandeeswari user
+      user:
+        name: pandeeswari
+        shell: /bin/bash
+        createhome: yes
