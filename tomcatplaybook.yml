@@ -1,0 +1,32 @@
+---
+- name: Connect to remote host via SSH
+  hosts: all
+  become: true
+  vars_files:
+    - vault.yml
+  tasks:
+    - name: Create pandeeswari user
+      user:
+        name: pandeeswari
+        shell: /bin/bash
+        createhome: yes
+    - name: downloading tomcat
+      get_url:
+        url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.6/bin/apache-tomcat-10.1.6.tar.gz
+        dest: /opt
+    - name: extracting tomcat
+      unarchive:
+        src: /opt/apache-tomcat-10.1.6.tar.gz
+        dest: /opt
+        remote_src: yes
+    - name: installing java
+      apt:
+        name: default-jdk
+        state: present
+    - name: sample war downloading
+      get_url:
+        url: https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war
+        dest: /opt/apache-tomcat-10.1.6/webapps
+    - name: starting tomcat
+      shell: nohup /opt/apache-tomcat-10.1.6/bin/startup.sh &
+      ignore_errors: true
