@@ -1,7 +1,7 @@
 ---
 - name: Connect to remote host via SSH
   hosts: all
-  become: true
+  become: yes
   vars_files:
     - vault.yml
   tasks:
