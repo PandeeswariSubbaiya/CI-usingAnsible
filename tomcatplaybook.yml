@@ -19,9 +19,19 @@
         src: /opt/apache-tomcat-10.1.6.tar.gz
         dest: /opt
         remote_src: yes
-    - name: installing java
+    - name: Add apt key
+      apt_key:
+        url: https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+        state: present
+    - name: Add apt repository
+      apt_repository:
+        repo: deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb focal main
+        state: present
+        filename: adoptopenjdk
+        update_cache: yes
+    - name: Install default JDK
       apt:
-        name: openjdk-11-jre-headless
+        name: default-jdk
         state: present
     - name: copy jar file
       copy:
