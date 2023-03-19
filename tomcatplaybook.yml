@@ -1,6 +1,6 @@
 ---
 - name: Connect to remote host via SSH
-  hosts: webserver
+  hosts: all
   become: true
   vars_files:
     - vault.yml
