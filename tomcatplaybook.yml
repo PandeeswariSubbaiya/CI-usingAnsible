@@ -23,10 +23,15 @@
       apt:
         name: default-jdk
         state: present
-    - name: sample war downloading
-      get_url:
-        url: https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war
-        dest: /opt/apache-tomcat-10.1.6/webapps
-    - name: starting tomcat
-      shell: nohup /opt/apache-tomcat-10.1.6/bin/startup.sh &
+    - name: copy jar file
+      copy:
+        src: /var/lib/jenkins/workspace/ansible_Vault/target/LoginWebApp-1
+        dest: /opt/apache-tomcat-10.1.6/webapps/
+      notify:
+        - restart tomcat
+  handlers:
+    - name: restart tomcat
+      service:
+        name: tomcat
+        state: restarted
       ignore_errors: true
