@@ -1,45 +1,38 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-            }
-        }
-
-        stage('Monitor Usage') {
-            environment {
-                CPU_THRESHOLD = '20'
-                MEMORY_THRESHOLD = '20'
-                DISK_THRESHOLD = '20'
-                EMAIL_ADDRESS = 'pandeeswari1814@gmail.com'
-                OUTPUT_FILE = 'output.txt'
-            }
+        stage('Monitor system resources') {
             steps {
                 sh '''
-                    DATE=$(date +"%Y-%m-%d %H:%M:%S")
-                    CPU_USAGE=$(top -b -n 1 | grep "%Cpu(s)" | awk '{print $2}')
-                    MEMORY_USAGE=$(free | awk 'NR==2{printf "%.2f", $3/$2*100}')
-                    DISK_USAGE=$(df -h / | awk 'NR==2{printf "%s", $5}' | cut -d'%' -f1)
-                    printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage"
-                    printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%"
-                    if [ $(echo "$CPU_USAGE < $CPU_THRESHOLD" | bc -l) -eq 1 ] && [ $(echo "$MEMORY_USAGE < $MEMORY_THRESHOLD" | bc -l) -eq 1 ] && [ $(echo "$DISK_USAGE < $DISK_THRESHOLD" | bc -l) -eq 1 ]
-                    then
-                        echo "Resource usage is below thresholds."
-                    else
-                        echo "Resource usage is above thresholds. Sending email to $EMAIL_ADDRESS"
-                        echo "Resource usage details:" >> $OUTPUT_FILE
-                        printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage" >> $OUTPUT_FILE
-                        printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%" >> $OUTPUT_FILE
-                    #    mail -s "Resource usage alert" $EMAIL_ADDRESS < $OUTPUT_FILE
-                        emailext body: 'email sent from jenkins', subject: 'High thresold', to: 'pandeeswari1814@gmail.com'
+                    #!/bin/bash
+                    
+                    # Set the threshold values for CPU, Memory, and Disk usage
+                    CPU_THRESHOLD=90
+                    MEMORY_THRESHOLD=20
+                    DISK_THRESHOLD=20
+                    
+                    # Get the current usage for CPU, Memory, and Disk
+                    CPU_USAGE=$(top -bn1 | grep load | awk '{printf "%.2f%%\n", $(NF-2)}')
+                    MEMORY_USAGE=$(free | awk 'NR==2{printf "%.2f%%\n", $3*100/$2}')
+                    DISK_USAGE=$(df -h | awk '$NF=="/"{printf "%s\n", $5}')
+                    
+                    # Output the usage to a file in table format
+                    echo -e "Resource\tUsage" > resource_usage.txt
+                    echo -e "CPU\t$CPU_USAGE" >> resource_usage.txt
+                    echo -e "Memory\t$MEMORY_USAGE" >> resource_usage.txt
+                    echo -e "Disk\t$DISK_USAGE" >> resource_usage.txt
+                    
+                    # Send email alert if any of the metrics exceed the threshold
+                    if (( $(echo "$CPU_USAGE < $CPU_THRESHOLD" | bc -l) )); then
+                        echo "CPU usage is above threshold: $CPU_USAGE" | mail -s "High CPU usage alert" pandeeswari1814@gmail.com
+                    fi
+                    
+                    if (( $(echo "$MEMORY_USAGE > $MEMORY_THRESHOLD" | bc -l) )); then
+                        echo "Memory usage is above threshold: $MEMORY_USAGE" | mail -s "High Memory usage alert" pandeeswari1814@gmail.com
+                    fi
+                    
+                    if (( $(echo "$DISK_USAGE > $DISK_THRESHOLD" | bc -l) )); then
+                        echo "Disk usage is above threshold: $DISK_USAGE" | mail -s "High Disk usage alert" pandeeswari1814@gmail.com
                     fi
                 '''
             }
