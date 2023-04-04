@@ -35,15 +35,15 @@ pipeline {
                     printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%" >> "$OUTPUT_FILE"
 
                     # Send an email notification if any of the metrics breaches the threshold
-                    if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
+                    if (( $(echo "$CPU_USAGE < $CPU_THRESHOLD" | bc -l) )); then
                         mail -s "CPU usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
                     fi
 
-                    if (( $(echo "$MEMORY_USAGE > $MEMORY_THRESHOLD" | bc -l) )); then
+                    if (( $(echo "$MEMORY_USAGE < $MEMORY_THRESHOLD" | bc -l) )); then
                         mail -s "Memory usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
                     fi
 
-                    if (( $(echo "$DISK_USAGE > $DISK_THRESHOLD" | bc -l) )); then
+                    if (( $(echo "$DISK_USAGE < $DISK_THRESHOLD" | bc -l) )); then
                         mail -s "Disk usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
                     fi
                 '''
