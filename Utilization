@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Monitor System') {
+            steps {
+                sh '''
+                    #!/bin/bash
+
+                    # Set thresholds for CPU usage, memory usage, and disk usage
+                    CPU_THRESHOLD=80
+                    MEM_THRESHOLD=80
+                    DISK_THRESHOLD=80
+
+                    # Get CPU usage, memory usage, and disk usage
+                    CPU=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+                    MEM=$(free | awk '/Mem/{printf("%.2f"), $3/$2*100}')
+                    DISK=$(df -h | awk '$NF=="/"{printf "%s", $5}')
+
+                    # Create a table with the metrics
+                    echo -e "Metric\t\tValue\t\tThreshold"
+                    echo -e "CPU Usage\t$CPU%\t\t$CPU_THRESHOLD%"
+                    echo -e "Memory Usage\t$MEM%\t\t$MEM_THRESHOLD%"
+                    echo -e "Disk Usage\t$DISK\t\t$DISK_THRESHOLD%"
+
+                    # Write the table to a file
+                    echo -e "Metric\t\tValue\t\tThreshold\nCPU Usage\t$CPU%\t\t$CPU_THRESHOLD%\nMemory Usage\t$MEM%\t\t$MEM_THRESHOLD%\nDisk Usage\t$DISK\t\t$DISK_THRESHOLD%" > metrics.txt
+
+                    # Send an email if any of the metrics breach the threshold
+                    if (( $(echo "$CPU > $CPU_THRESHOLD" | bc -l) )); then
+                        echo "CPU usage is above the threshold of $CPU_THRESHOLD%" | mail -s "System Metrics Alert" pandeeswari318@gmail.com
+                    fi
+                    if (( $(echo "$MEM > $MEM_THRESHOLD" | bc -l) )); then
+                        echo "Memory usage is above the threshold of $MEM_THRESHOLD%" | mail -s "System Metrics Alert" pandeeswari318@gmail.com
+                    fi
+                    if (( $(echo "${DISK%?} > $DISK_THRESHOLD" | bc -l) )); then
+                        echo "Disk usage is above the threshold of $DISK_THRESHOLD%" | mail -s "System Metrics Alert" pandeeswari318@gmail.com
+                    fi
+                '''
+            }
+        }
+    }
+}
