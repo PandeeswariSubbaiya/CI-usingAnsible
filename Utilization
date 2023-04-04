@@ -6,31 +6,45 @@ pipeline {
             steps {
                 sh '''
                     #!/bin/bash
-                    
-                    # Get CPU, memory, and disk usage
-                    CPU=$(top -bn1 | grep load | awk '{printf "%.2f%%\t\t\t", $(NF-2)}')
-                    MEMORY=$(free -m | awk 'NR==2{printf "%.2f%%\t\t\t", $3*100/$2 }')
-                    DISK=$(df -h | awk '$NF=="/"{printf "%.2f%%\t\t\t", $5}')
-                    
-                    # Write output to file in table format
-                    echo -e "CPU Usage\tMemory Usage\tDisk Usage"
-                    echo -e "$CPU$MEMORY$DISK" >> metrics.txt
-                    
-                    # Check thresholds and send email if breached
-                    CPU_THRESHOLD=80
-                    MEMORY_THRESHOLD=80
-                    DISK_THRESHOLD=80
-                    
-                    if (( $(echo "$CPU" | cut -f1 -d%) > $CPU_THRESHOLD )); then
-                        echo "CPU usage is above threshold of $CPU_THRESHOLD%" | mail -s "CPU usage exceeded threshold" pandeeswari318@gmail.com
+
+                    # Set the threshold for each metric (CPU usage, memory usage, and disk usage)
+                    CPU_THRESHOLD=20
+                    MEMORY_THRESHOLD=20
+                    DISK_THRESHOLD=20
+
+                    # Set the email address to send notifications to
+                    EMAIL_ADDRESS="pandeeswari@lntinfotech.com"
+
+                    # Set the file to write the output to
+                    OUTPUT_FILE="samplesh.txt"
+
+                    # Get the current date and time
+                    DATE=$(date +"%Y-%m-%d %H:%M:%S")
+
+                    # Get the CPU usage percentage
+                    CPU_USAGE=$(top -b -n 1 | grep "%Cpu(s)" | awk '{print $2}')
+
+                    # Get the memory usage percentage
+                    MEMORY_USAGE=$(free | awk 'NR==2{printf "%.2f", $3/$2*100}')
+
+                    # Get the disk usage percentage
+                    DISK_USAGE=$(df -h / | awk 'NR==2{printf "%s", $5}' | cut -d'%' -f1)
+
+                    # Write the output to the output file in table format
+                    printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage" >> "$OUTPUT_FILE"
+                    printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%" >> "$OUTPUT_FILE"
+
+                    # Send an email notification if any of the metrics breaches the threshold
+                    if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
+                        mail -s "CPU usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
                     fi
-                    
-                    if (( $(echo "$MEMORY" | cut -f1 -d%) > $MEMORY_THRESHOLD )); then
-                        echo "Memory usage is above threshold of $MEMORY_THRESHOLD%" | mail -s "Memory usage exceeded threshold" pandeeswari318@gmail.com
+
+                    if (( $(echo "$MEMORY_USAGE > $MEMORY_THRESHOLD" | bc -l) )); then
+                        mail -s "Memory usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
                     fi
-                    
-                    if (( $(echo "$DISK" | cut -f1 -d%) > $DISK_THRESHOLD )); then
-                        echo "Disk usage is above threshold of $DISK_THRESHOLD%" | mail -s "Disk usage exceeded threshold" pandeeswari318@gmail.com
+
+                    if (( $(echo "$DISK_USAGE > $DISK_THRESHOLD" | bc -l) )); then
+                        mail -s "Disk usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
                     fi
                 '''
             }
