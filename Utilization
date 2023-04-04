@@ -22,13 +22,13 @@ pipeline {
                     DATE=$(date +"%Y-%m-%d %H:%M:%S")
 
                     # Get the CPU usage percentage
-                    CPU_USAGE=$(top -b -n 1 | grep "%Cpu(s)" | awk '{print $2}')
+                    CPU_USAGE=$(top -b -n 1 | grep '%Cpu' | awk '{print $2}' | cut -d'.' -f1)
 
                     # Get the memory usage percentage
-                    MEMORY_USAGE=$(free | awk 'NR==2{printf "%.2f", $3/$2*100}')
+                     MEMORY_USAGE=$(free | awk 'NR==2{printf "%.2f", $3/$2*100}' | cut -d'.' -f1)
 
                     # Get the disk usage percentage
-                    DISK_USAGE=$(df -h / | awk 'NR==2{printf "%s", $5}' | cut -d'%' -f1)
+                    DISK_USAGE=$(df -h / | awk 'NR==2{print $5}' | cut -d'%' -f1)
 
                     # Write the output to the output file in table format
                     printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage" >> "$OUTPUT_FILE"
