@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    
+    parameters {
+        string(name: 'DAYS', defaultValue: '1', description: 'Number of days to search for files')
+    }
+
+    stages {
+        stage('Find Files') {
+            steps {
+                sh '''
+                    # Find files created within the last $DAYS days and their sizes
+                    find . -type f -mtime -"$DAYS" -exec stat --printf="%s %n\n" {} \\;
+                '''
+            }
+        }
+    }
+    
+    post {
+        always {
+            script {
+                def output = sh(script: "find . -type f -mtime -${params.DAYS} -exec stat --printf='%s %n\n' {} \\;", returnStdout: true)
+                echo "Files created within the last ${params.DAYS} day(s): \n ${output}"
+            }
+        }
+    }
+}
