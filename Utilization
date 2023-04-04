@@ -16,7 +16,7 @@ pipeline {
                     EMAIL_ADDRESS="pandeeswari1814@gmail.com"
 
                     # Set the file to write the output to
-                    OUTPUT_FILE="$WORKSPACE/output.txt"
+                    OUTPUT_FILE="output.txt"
 
                     # Get the current date and time
                     DATE=$(date +"%Y-%m-%d %H:%M:%S" | cut -d. -f1)
