@@ -5,17 +5,18 @@ pipeline {
         string(name: 'FROM_DATE', defaultValue: '2023-04-01', description: 'From date in YYYY-MM-DD format')
         string(name: 'TO_DATE', defaultValue: '2023-04-04', description: 'To date in YYYY-MM-DD format')
     }
-
+stages {
     stage('Find Files') {
-    steps {
-        script {
-            def from_date = sh(script: "date -d '${params.from_date}' +%s", returnStdout: true).trim()
-            def to_date = sh(script: "date -d '${params.to_date}' +%s", returnStdout: true).trim()
-            def days = (to_date.toLong() - from_date.toLong()) / 86400
-            def output = sh(script: "find . -type f -newermt ${params.from_date} ! -newermt ${params.to_date} -exec ls -lh {} \\; | awk '{print \$5, \$9}'", returnStdout: true)
-            tput("bold", "Files created in the last ${days} days:")
-            echo output
+        steps {
+            script {
+                def from_date = sh(script: "date -d '${params.from_date}' +%s", returnStdout: true).trim()
+                def to_date = sh(script: "date -d '${params.to_date}' +%s", returnStdout: true).trim()
+                def days = (to_date.toLong() - from_date.toLong()) / 86400
+                def output = sh(script: "find . -type f -newermt ${params.from_date} ! -newermt ${params.to_date} -exec ls -lh {} \\; | awk '{print \$5, \$9}'", returnStdout: true)
+                tput("bold", "Files created in the last ${days} days:")
+                echo output
+                }
+            }
         }
     }
-}
 }
