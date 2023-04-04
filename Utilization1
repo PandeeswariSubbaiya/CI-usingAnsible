@@ -1,42 +1,53 @@
 pipeline {
     agent any
-    
+
     stages {
-        stage('Monitor system usage') {
+        stage('Monitor System Metrics') {
             steps {
-                sh '''
+                sh """
                     #!/bin/bash
                     
-                    # Define threshold values for CPU, memory, and disk usage
-                    cpu_threshold=20
-                    mem_threshold=20
-                    disk_threshold=20
-                    
-                    # Monitor CPU usage and store output in a variable
-                    cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
-                    
-                    # Monitor memory usage and store output in a variable
-                    mem_usage=$(free | awk 'NR==2{printf "%.2f%%\t\t", $3*100/$2 }')
-                    
-                    # Monitor disk usage and store output in a variable
-                    disk_usage=$(df -h | awk '$NF=="/"{printf "%s\t\t", $5}')
-                    
-                    # Write the usage information to a table format in /opt/output.txt
-                    printf "%s\t%s\t%s\n" "CPU Usage" "Memory Usage" "Disk Usage" >> /opt/output.txt
-                    printf "%s\t\t%s\t\t%s\n" "${cpu_usage}%" "${mem_usage}" "${disk_usage}" >> /opt/output.txt
-                    
-                    # Send email alert if any of the metrics breach threshold
-                    if (( $(echo "$cpu_usage > $cpu_threshold" | bc -l) )); then
-                        echo "CPU usage has breached threshold of ${cpu_threshold}%" | mail -s "System Usage Alert" pandeeswari1814@gmail.com
-                    fi
-                    if (( $(echo "${mem_usage::-1} > $mem_threshold" | bc -l) )); then
-                        echo "Memory usage has breached threshold of ${mem_threshold}%" | mail -s "System Usage Alert" pandeeswari1814@gmail.com
-                    fi
-                    if (( $(echo "${disk_usage::-1} > $disk_threshold" | bc -l) )); then
-                        echo "Disk usage has breached threshold of ${disk_threshold}%" | mail -s "System Usage Alert" pandeeswari1814@gmail.com
-                    fi
-                '''
+                    # Function to format output as table
+                    format_output() {
+                        awk '{ printf "%-15s %-10s %-10s %-10s\n", \$1, \$2, \$3, \$4 }'
+                    }
+
+                    # Get CPU usage
+                    cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{printf "%.2f%%\n", 100-$1}')
+
+                    # Get memory usage
+                    mem_total=$(free -m | awk 'NR==2{printf "%s MB\n", $2}')
+                    mem_used=$(free -m | awk 'NR==2{printf "%s MB\n", $3}')
+                    mem_percent=$(free | awk 'NR==2{printf "%.2f%%\n", $3/$2*100}')
+
+                    # Get disk usage
+                    disk_total=$(df -h / | awk '{printf "%s\n", $2}')
+                    disk_used=$(df -h / | awk '{printf "%s\n", $3}')
+                    disk_percent=$(df -h / | awk '{printf "%s\n", $5}')
+
+                    # Output metrics to file in table format
+                    echo -e "Metric          Total     Used      Percent\n--------------------------------------------------" > /opt/output.txt
+                    echo -e "CPU             --        --        $cpu_usage" | format_output >> /opt/output.txt
+                    echo -e "Memory          $mem_total   $mem_used   $mem_percent" | format_output >> /opt/output.txt
+                    echo -e "Disk            $disk_total   $disk_used   $disk_percent" | format_output >> /opt/output.txt
+                """
             }
+        }
+    }
+
+    post {
+        always {
+            // Send email if any of the metrics breach threshold
+            emailext body: "One or more system metrics have breached their threshold.\n\nSee /opt/output.txt for details.",
+                     mimeType: 'text/plain',
+                     subject: 'System Metrics Breached Threshold',
+                     to: 'pandeeswari1814@gmail.com',
+                     attachmentsPattern: '/opt/output.txt',
+                     compress: true,
+                     replyTo: 'noreply@example.com',
+                     from: 'jenkins@example.com',
+                     replyTo: 'pandeeswari1814@gmail.com',
+                     recipientProviders: [[$class: 'DevelopersRecipientProvider']]
         }
     }
 }
