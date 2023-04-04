@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Monitor system usage') {
+            steps {
+                sh '''
+                    #!/bin/bash
+                    
+                    # Define threshold values for CPU, memory, and disk usage
+                    cpu_threshold=20
+                    mem_threshold=20
+                    disk_threshold=20
+                    
+                    # Monitor CPU usage and store output in a variable
+                    cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+                    
+                    # Monitor memory usage and store output in a variable
+                    mem_usage=$(free | awk 'NR==2{printf "%.2f%%\t\t", $3*100/$2 }')
+                    
+                    # Monitor disk usage and store output in a variable
+                    disk_usage=$(df -h | awk '$NF=="/"{printf "%s\t\t", $5}')
+                    
+                    # Write the usage information to a table format in /opt/output.txt
+                    printf "%s\t%s\t%s\n" "CPU Usage" "Memory Usage" "Disk Usage" >> /opt/output.txt
+                    printf "%s\t\t%s\t\t%s\n" "${cpu_usage}%" "${mem_usage}" "${disk_usage}" >> /opt/output.txt
+                    
+                    # Send email alert if any of the metrics breach threshold
+                    if (( $(echo "$cpu_usage > $cpu_threshold" | bc -l) )); then
+                        echo "CPU usage has breached threshold of ${cpu_threshold}%" | mail -s "System Usage Alert" pandeeswari1814@gmail.com
+                    fi
+                    if (( $(echo "${mem_usage::-1} > $mem_threshold" | bc -l) )); then
+                        echo "Memory usage has breached threshold of ${mem_threshold}%" | mail -s "System Usage Alert" pandeeswari1814@gmail.com
+                    fi
+                    if (( $(echo "${disk_usage::-1} > $disk_threshold" | bc -l) )); then
+                        echo "Disk usage has breached threshold of ${disk_threshold}%" | mail -s "System Usage Alert" pandeeswari1814@gmail.com
+                    fi
+                '''
+            }
+        }
+    }
+}
