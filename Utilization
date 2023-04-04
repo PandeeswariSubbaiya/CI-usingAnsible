@@ -20,7 +20,7 @@ pipeline {
                 MEMORY_THRESHOLD = '50'
                 DISK_THRESHOLD = '50'
                 EMAIL_ADDRESS = 'pandeeswari1814@gmail.com'
-                OUTPUT_FILE = 'output.txt'
+                OUTPUT_FILE = '/var/lib/jenkins/output.txt'
             }
             steps {
                 sh '''
