@@ -1,51 +1,41 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Monitor Usage') {
             steps {
                 sh '''
-                    #!/bin/bash
-
-                    # Set the threshold for each metric (CPU usage, memory usage, and disk usage)
+                    # Set the threshold values
                     CPU_THRESHOLD=20
                     MEMORY_THRESHOLD=20
                     DISK_THRESHOLD=20
-
-                    # Set the email address to send notifications to
-                    EMAIL_ADDRESS="pandeeswari@lntinfotech.com"
-
-                    # Set the file to write the output to
-                    OUTPUT_FILE="samplesh.txt"
+                    EMAIL_ADDRESS=pandeeswari1814@gmail.com
+                    OUTPUT_FILE=output.txt
 
                     # Get the current date and time
-                    DATE=$(date +"%Y-%m-%d %H:%M:%S")
+                    DATE=$(date +%Y-%m-%d\ %H:%M:%S | cut -d. -f1)
 
                     # Get the CPU usage percentage
-                    CPU_USAGE=$(top -b -n 1 | grep '%Cpu' | awk '{print $2}' | cut -d'.' -f1)
+                    CPU_USAGE=$(top -b -n 1 | grep '%Cpu' | awk '{print $2}')
 
-                    # Get the memory usage percentage
-                     MEMORY_USAGE=$(free | awk 'NR==2{printf "%.2f", $3/$2*100}' | cut -d'.' -f1)
+                    # Get the Memory usage percentage
+                    MEMORY_USAGE=$(free | awk 'NR==2{printf "%.2f", $3/$2*100}')
 
-                    # Get the disk usage percentage
-                    DISK_USAGE=$(df -h / | awk 'NR==2{print $5}' | cut -d'%' -f1)
+                    # Get the Disk usage percentage
+                    DISK_USAGE=$(df -h / | awk 'NR==2{print $5}' | cut -d% -f1)
 
-                    # Write the output to the output file in table format
-                    printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage" >> "$OUTPUT_FILE"
-                    printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%" >> "$OUTPUT_FILE"
+                    # Create the output table and print it to the console
+                    printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage"
+                    printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%"
 
-                    # Send an email notification if any of the metrics breaches the threshold
-                    if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
-                        mail -s "CPU usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
+                    # Send an email alert if any usage percentage exceeds the threshold
+                    if [ "$CPU_USAGE" -gt "$CPU_THRESHOLD" ] || [ "$MEMORY_USAGE" -gt "$MEMORY_THRESHOLD" ] || [ "$DISK_USAGE" -gt "$DISK_THRESHOLD" ]; then
+                        echo "Usage threshold exceeded!" | mail -s "Usage Alert" $EMAIL_ADDRESS
                     fi
 
-                    if (( $(echo "$MEMORY_USAGE > $MEMORY_THRESHOLD" | bc -l) )); then
-                        mail -s "Memory usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
-                    fi
-
-                    if (( $(echo "$DISK_USAGE > $DISK_THRESHOLD" | bc -l) )); then
-                        mail -s "Disk usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
-                    fi
+                    # Save the output to a file in table format
+                    printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage" > $OUTPUT_FILE
+                    printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%" >> $OUTPUT_FILE
                 '''
             }
         }
