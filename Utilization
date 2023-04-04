@@ -38,7 +38,7 @@ pipeline {
                         echo "Resource usage details:" >> $OUTPUT_FILE
                         printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage" >> $OUTPUT_FILE
                         printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%" >> $OUTPUT_FILE
-                  //      mail -s "Resource usage alert" $EMAIL_ADDRESS < $OUTPUT_FILE
+                    #    mail -s "Resource usage alert" $EMAIL_ADDRESS < $OUTPUT_FILE
                         emailext body: 'email sent from jenkins', subject: 'High thresold', to: 'pandeeswari1814@gmail.com'
                     fi
                 '''
