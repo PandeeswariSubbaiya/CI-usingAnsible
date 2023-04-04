@@ -7,8 +7,6 @@ pipeline {
                 sh '''
                     #!/bin/bash
 
-                    set -e
-
                     # Set the threshold for each metric (CPU usage, memory usage, and disk usage)
                     CPU_THRESHOLD=1%
                     MEMORY_THRESHOLD=1%
@@ -18,7 +16,7 @@ pipeline {
                     EMAIL_ADDRESS="pandeeswari1814@gmail.com"
 
                     # Set the file to write the output to
-                    OUTPUT_FILE="output.txt"
+                    OUTPUT_FILE="$WORKSPACE/output.txt"
 
                     # Get the current date and time
                     DATE=$(date +"%Y-%m-%d %H:%M:%S" | cut -d. -f1)
@@ -33,7 +31,7 @@ pipeline {
                     DISK_USAGE=$(df -h / | awk 'NR==2{printf "%s", $5}' | cut -d'%' -f1)
 
                     # Write the output to the output file in table format
-                    printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage" >> "$OUTPUT_FILE"
+                    printf "%-19s %-10s %-13s %-12s\n" "Date and Time" "CPU Usage" "Memory Usage" "Disk Usage" > "$OUTPUT_FILE"
                     printf "%-19s %-10s %-13s %-12s\n" "$DATE" "$CPU_USAGE%" "$MEMORY_USAGE%" "$DISK_USAGE%" >> "$OUTPUT_FILE"
 
                     # Send an email notification if any of the metrics breaches the threshold
