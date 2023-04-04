@@ -6,27 +6,16 @@ pipeline {
         string(name: 'TO_DATE', defaultValue: '2023-04-04', description: 'To date in YYYY-MM-DD format')
     }
 
-    stages {
-        stage('Find Files') {
-            steps {
-                sh '''
-                    # Convert date format to seconds since epoch
-                    from_date=$(date -d "$FROM_DATE" +%s)
-                    to_date=$(date -d "$TO_DATE" +%s)
-                    
-                    # Find files created within the specified date range and their sizes
-                    find . -type f -newermt "$FROM_DATE" ! -newermt "$TO_DATE" -exec stat --printf="%s %n\n" {} \\;
-                '''
-            }
+    stage('Find Files') {
+    steps {
+        script {
+            def from_date = sh(script: "date -d '${params.from_date}' +%s", returnStdout: true).trim()
+            def to_date = sh(script: "date -d '${params.to_date}' +%s", returnStdout: true).trim()
+            def days = (to_date.toLong() - from_date.toLong()) / 86400
+            def output = sh(script: "find . -type f -newermt ${params.from_date} ! -newermt ${params.to_date} -exec ls -lh {} \\; | awk '{print \$5, \$9}'", returnStdout: true)
+            tput("bold", "Files created in the last ${days} days:")
+            echo output
         }
     }
-    
-    post {
-        always {
-            script {
-                def output = sh(script: "from_date=$(date -d '${params.FROM_DATE}' +%s); to_date=$(date -d '${params.TO_DATE}' +%s); find . -type f -newermt '${params.FROM_DATE}' ! -newermt '${params.TO_DATE}' -exec stat --printf='%s %n\n' {} \\;", returnStdout: true)
-                echo "Files created between ${params.FROM_DATE} and ${params.TO_DATE}: \n ${output}"
-            }
-        }
-    }
+}
 }
