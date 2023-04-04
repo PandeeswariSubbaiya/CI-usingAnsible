@@ -8,9 +8,9 @@ pipeline {
                     #!/bin/bash
 
                     # Set the threshold for each metric (CPU usage, memory usage, and disk usage)
-                    CPU_THRESHOLD=20
-                    MEMORY_THRESHOLD=20
-                    DISK_THRESHOLD=20
+                    CPU_THRESHOLD=1
+                    MEMORY_THRESHOLD=1
+                    DISK_THRESHOLD=1
 
                     # Set the email address to send notifications to
                     EMAIL_ADDRESS="pandeeswari1814@gmail.com"
