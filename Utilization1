@@ -5,11 +5,6 @@ pipeline {
             steps {
                 sh '''
                     #!/bin/bash
-                    # Set the threshold for each metric (CPU usage, memory usage, and disk usage)
-                        CPU_THRESHOLD=20
-                        MEMORY_THRESHOLD=20
-                        DISK_THRESHOLD=20
-                        EMAIL_ADDRESS=pandeeswari1814@gmail.com
                     CPU_USAGE=$(top -b -n 1 | grep "%Cpu(s)" | awk '{print $2}')
                     mem_usage=$(free | awk '/Mem/{printf("%.2f"), $3/$2*100}')
                     disk_usage=$(df -h | awk '$NF=="/"{printf "%s", $5}')
@@ -20,17 +15,20 @@ pipeline {
                     printf "| %-20s | %-15s | %-15s | %-15s |\n" "Timestamp" "CPU Usage" "Memory Usage" "Disk Usage" >> "$output"
                     printf "| %-20s | %-15s | %-15s | %-15s |\n" "$timestamp" "$cpu_usage%" "$mem_usage%" "$disk_usage" >> "$output"
                     
-                   # Send an email notification if any of the metrics breaches the threshold
-                    if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
-                        mail -s "CPU usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
+                   # Send email if thresholds are breached
+                    if (( $(echo "$cpu_usage > 20" | bc -l) )); then
+                        echo "CPU usage threshold breached. Current usage: $cpu_usage%"
+                        mail -s "CPU usage threshold breached" pandeeswari1814@gmail.com < "$output"
                     fi
-
-                    if (( $(echo "$MEMORY_USAGE > $MEMORY_THRESHOLD" | bc -l) )); then
-                        mail -s "Memory usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
+                    
+                    if (( $(echo "$mem_usage > 20" | bc -l) )); then
+                        echo "Memory usage threshold breached. Current usage: $mem_usage%"
+                        mail -s "Memory usage threshold breached" pandeeswari1814@gmail.com < "$output"
                     fi
-
-                    if (( $(echo "$DISK_USAGE > $DISK_THRESHOLD" | bc -l) )); then
-                        mail -s "Disk usage threshold breached" "$EMAIL_ADDRESS" < "$OUTPUT_FILE"
+                    
+                    if (( $(echo "${disk_usage%?} > 20" | bc -l) )); then
+                        echo "Disk usage threshold breached. Current usage: $disk_usage"
+                        mail -s "Disk usage threshold breached" pandeeswari1814@gmail.com < "$output"
                     fi
                 '''
             }
