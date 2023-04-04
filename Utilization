@@ -13,7 +13,7 @@ pipeline {
                     OUTPUT_FILE=output.txt
 
                     # Get the current date and time
-                    DATE=$(date +%Y-%m-%d\ %H:%M:%S | cut -d. -f1)
+                    DATE=$(date +"%Y-%m-%d %H:%M:%S" | cut -d. -f1)
 
                     # Get the CPU usage percentage
                     CPU_USAGE=$(top -b -n 1 | grep '%Cpu' | awk '{print $2}')
