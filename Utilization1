@@ -9,7 +9,7 @@ pipeline {
                     mem_usage=$(free | awk '/Mem/{printf("%.2f"), $3/$2*100}')
                     disk_usage=$(df -h | awk '$NF=="/"{printf "%s", $5}')
                     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-                    output="/opt/output.txt"
+                    output="/var/lib/jenkins/output.txt"
                     
                     # Save output to file in table format
                     printf "| %-20s | %-15s | %-15s | %-15s |\n" "Timestamp" "CPU Usage" "Memory Usage" "Disk Usage" >> "$output"
