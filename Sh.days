@@ -6,4 +6,4 @@ if [ "$#" -ne 1 ]; then
 fi
 
 days="$1"
-find . -type f -mtime -$days -exec ls -lh {} \; | awk '{ print $5, $9 }'
+find . -type f -mtime -$days -printf "%s %p\n"
