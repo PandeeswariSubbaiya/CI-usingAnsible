@@ -1,3 +1,5 @@
+##    Shell script to find the files created and its sizes. It should accept i) the number of days as input and ii) a from and to date format as inputs.
+
 #!/bin/bash
 
 if [ "$#" -eq 1 ]; then
