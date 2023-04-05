@@ -1,3 +1,5 @@
+ ## Write Shell script to monitor CPU, Memory and Disk usage and send the output to a file in table format. Also send mail if any of the metrics breaches threshold
+
 #!/bin/bash
 
 # Set the threshold for each metric (CPU usage, memory usage, and disk usage)
