@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <March 8, 2023> <April 5, 2023>"
+  exit 1
+fi
+
+# Parse the "from" date argument and convert it to a UNIX timestamp
+from_date=$(date -d "$1" "+%s")
+
+# Parse the "to" date argument and convert it to a UNIX timestamp
+to_date=$(date -d "$2" "+%s")
+
+# Calculate the time range between the "from" and "to" dates, in seconds
+time_range=$(expr $to_date - $from_date)
+
+# Calculate the number of days in the time range
+days=$(expr $time_range / 86400)
+
+# Find files created within the date range, and display their sizes and names
+find . -type f -newermt "$1" ! -newermt "$2" -exec ls -lh {} \; | awk '{ print $5, $9 }'
