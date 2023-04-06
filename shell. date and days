@@ -10,7 +10,7 @@ elif [ "$#" -eq 2 ]; then
     # Find files created between from and to dates
     from_date="$1"
     to_date="$2"
-    find . -type f -newermt "$from_date" ! -newermt "$to_date" -exec ls -lh {} \; | awk '{print $5, $9}'
+    find . -type f -newermt "$from_date" ! -newermt "$to_date" -exec ls -lh {} \; | awk '{print %s, %p}'
 else
     echo "Usage:"
     echo "  $0 <number of days>"
